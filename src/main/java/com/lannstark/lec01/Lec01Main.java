@@ -10,7 +10,7 @@ public class Lec01Main {
     final long number2 = 10L; // (2)
 
     Long number3 = 1_000L; // (3)
-    Person person = new Person("최태현"); // (4)
+    Person person = new Person("최태현 "); // (4)
   }
 
 }
