@@ -10,6 +10,10 @@ public class JavaHouse {
     this.livingRoom = new LivingRoom(10);
   }
 
+  public JavaHouse() {
+
+  }
+
   public LivingRoom getLivingRoom() {
     return livingRoom;
   }
@@ -25,5 +29,11 @@ public class JavaHouse {
       return JavaHouse.this.address;
     }
   }
+
+  public static class tt{
+    private String name = "ddd";
+    public String publicName = "public";
+  }
+
 
 }

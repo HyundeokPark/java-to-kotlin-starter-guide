@@ -18,7 +18,7 @@ fun main(){
         println("1이 2보다 크다!")
     }
 
-    val moneys1 = Money(1_000L)
+//    val moneys1 = Money(1_000L)
 }
 class lec04 {
 }
