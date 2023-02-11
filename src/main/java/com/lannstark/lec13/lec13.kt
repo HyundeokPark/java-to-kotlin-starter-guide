@@ -24,7 +24,7 @@ class lec13 {
  *  그럼 static을 사용하는 권장버전의 중첩클래스를 kotlin으로 작성해보자!
  *  - static 문법이 없는데, 어떻게??/ companion object?... 는 그냥 class를 쓰면 자동으로 해준다.
  */
-class JavaHouse(
+class KotlinHouse(
     private val address: String,
     private val livingRoom : LivingRoom
 ){
@@ -43,7 +43,7 @@ class JavaHouse(
     ){
         val address: String
             //외부 클래스를 참조할때 this 키워드와 @외부클래스명 어노테이션을 붙여야 한다!
-            get() = this@JavaHouse.address
+            get() = this@KotlinHouse.address
     }
 }
 
