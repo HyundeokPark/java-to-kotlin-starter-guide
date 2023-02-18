@@ -57,11 +57,23 @@ data class Fruit(
  * - 강사 설명
  *  fruits.filter{fruit -> filter(fruit) } -> fruits.filter({람다})라는 뜻이다. 왜지?... 이건 잘 모르겠는데..
  *  또 람다이기 때문에 그 자체로 함수를 집어넣어줄 수 있다.
- *  즉, 인자로 받은 함수인 변수filter를 넣을 수 있다는것!... -> fruits.filter(filter)
+ *  즉, 인자로 받은 함수인 변수 filter를 넣을 수 있다는것!... -> fruits.filter(filter)
  *  -> 이해가 잘 되지 않는다. 17강을 보고 와도.. 될듯 하면서 안되넴
+ *  아니다. 다시 생각해보자, 람다라는것 자체가
+ *  1.처음에 인자로 받을 파라미터를 선언해주고 (fruit)
+ *  2.-> 표기로 인자와 함수를 구분하고
+ *  3.다음 함수 바디를 선언 해주는 것이다.(filter(fruit))
+ *  ~~4.그런데 인자를 받는 파라미터 자체가 함수라면?..~~
+ *  ~~5.그리고 그 함수가 어차피 람다로 쓸 경우 인자로 선언하는 값을 인자로 받는 함수라면?... (여기선 어차피 fruits의 원소인 fruit을 받는다면?..)~~
+ *  ~~6.대충 느낌은 알겠는데, 그런다고 인자를 마음대로 생략이 가능하다고?...~~
+ *  4. 어떤 함수의 마지막 파라미터가 함수라면 이를 소괄호 밖으로 빼내어 쓸 수 있다.
+ *   -> filter {람다..} 는 결국 filter({람다..}) 인것이다.
+ *  5. 그리고 코틀린에서 함수는 1급시민 이기때문에, 함수 그자체를 넘길 수 있다.
+ *  -> filter({람다..}) 는 filter(변수명) 여기서 변수는 람다함수를 받고 있는 변수인것!
+ *  그래서 함수의 인자로 받은 filter 변수를 filter() 람다에 그대로 집어 넣을 수 있는것이다!
  */
-private fun filterFruitsRefactored(fruits: List<com.lannstark.lec17.Fruit>, filter: (com.lannstark.lec17.Fruit) -> Boolean)
-        : List<com.lannstark.lec17.Fruit> {
+private fun filterFruitsRefactored(fruits: List<Fruit>, filter: (Fruit) -> Boolean)
+        : List<Fruit> {
     //이게 내가 생각한 최초 버전
     return fruits.filter{fruit -> filter(fruit) }
     //이게 강사가 말한 버전
@@ -72,9 +84,9 @@ private fun filterFruitsRefactored(fruits: List<com.lannstark.lec17.Fruit>, filt
 /**
  * 17강의 filterFruits 함수
  */
-private fun filterFruits(fruits: List<com.lannstark.lec17.Fruit>, filter: (com.lannstark.lec17.Fruit) -> Boolean)
-        : List<com.lannstark.lec17.Fruit> {
-    val result = mutableListOf<com.lannstark.lec17.Fruit>()
+private fun filterFruits(fruits: List<Fruit>, filter: (Fruit) -> Boolean)
+        : List<Fruit> {
+    val result = mutableListOf<Fruit>()
     for(fruit in fruits){
         if(filter(fruit)) {
             result.add(fruit)
