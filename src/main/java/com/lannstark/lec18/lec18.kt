@@ -6,35 +6,127 @@ package com.lannstark.lec18
  * 2. 다양한 컬렉션 처리 기능
  * 3. List를 Map으로
  */
-fun main(){
-    val fruits =  listOf(Fruit(1L,"apple",100L,200L),
-        Fruit(1L,"apple",100L,200L),
-        Fruit(1L,"apple",100L,200L),
-        Fruit(1L,"apple",100L,200L),)
+fun main() {
+    val fruits = listOf(
+        Fruit(1L, "apple", 100L, 200L),
+        Fruit(1L, "apple", 100L, 200L),
+        Fruit(1L, "apple", 100L, 200L),
+        Fruit(1L, "apple", 100L, 200L),
+    )
 
     //통상적인 filter 사용법, java의 스트림 필터와 비슷
     val apples = fruits.filter { frutit -> frutit.name == "apple" }
 
     // filter에서 인덱스가 필요할 경우
-    val applesWithIndex = fruits.filterIndexed{ idx, fruit ->
+    val applesWithIndex = fruits.filterIndexed { idx, fruit ->
         println(idx)
         fruit.name == "apple"
     }
 
     //사과의 가격들을 알려주세요! 메소드 체이닝이 가능하다!
-    val applePrices = fruits.filter { fruit -> fruit.name =="apple" }
+    val applePrices = fruits.filter { fruit -> fruit.name == "apple" }
         .map { fruit -> fruit.currentPrice }
 
     //마찬가지로 인덱스가 필요하다면?
     val applePriceWithIndex = fruits.filter { fruit -> fruit.name == "apple" }
-        .mapIndexed{idx, fruit->
+        .mapIndexed { idx, fruit ->
             println(idx)
             fruit.currentPrice
         }
 
     //맵핑의의 결과가 null이 아닌 것만 가져오고 싶다면?
-    val values = fruits.filter { fruit -> fruit.name =="apple" }
-        .mapNotNull { fruit ->  fruit.currentPrice}
+    val values = fruits.filter { fruit -> fruit.name == "apple" }
+        .mapNotNull { fruit -> fruit.currentPrice }
+
+    //all : 조건을 모두 만족하면 true,아니면 false
+    val isAplleAll = fruits.all { fruit -> fruit.name == "apple" }
+
+    //none : 주어진 조건을 모두 불만족 하면 true, 아니면 fasle
+    val isNoApple = fruits.none { fruit -> fruit.name == "apple" }
+
+    //any : 하나라도 만족하면 true, 아니면 false
+    val isAnyApple = fruits.any { fruit -> fruit.factoryPrice >= 10_000 }
+
+    //count : 개수를 센다. list의 size랑 같다고 보면 된다.
+    val fruitCount = fruits.count()
+
+    //sortedBy : (오름차순) 정렬을 한다.
+    val fruitSorted = fruits.sortedBy { fruit -> fruit.currentPrice }
+
+    //sortedByDescending : (내림차순)으로 정렬 한다,
+    val fruitSortedDecsending = fruits.sortedByDescending { fruit -> fruit.currentPrice  }
+
+    //distinctBy : 변형된 값을 기준으로 중복을 제거한다.
+    val dintinctedFruit = fruits.distinctBy { fruit ->  fruit.name}
+        .map {fruit -> fruit.name }
+
+    //첫번째 과일만 주세요, 마지막 과일만 주세요!
+    //first : 첫번째 값을 가져온다. (무조건 non null 이어야 함)
+    //firstOrNull : 첫번째 값 또는 null을 가져온다.
+    val firstFruit = fruits.first()
+    val firstOrNullFruit = fruits.firstOrNull()
+
+    //last : 마지막 값을 가져온다. nonnull
+    //lastOrNull : 마지막 값을 가져오거나 null을 가져온다.
+    val lastFruit = fruits.last()
+    val lastOrNullFruit = fruits.lastOrNull()
+
+    // 과일이름 -> List<과일> Map이 필요해! 이름을 기준으로 그룹핑이 된다.
+    val map: Map<String, List<Fruit>> = fruits.groupBy { fruit -> fruit.name }
+
+    //ID가 키이고, value 가 과일인 Map이 필요한다!
+    //중복되지 않는 그룹핑이 필요할 때!
+    val map2: Map<Long,Fruit> = fruits.associateBy { fruit -> fruit.id }
+
+    // 과일이름 -> List<출고가> Map이 필요하다!
+    // 함수형 파라미터를 두개이상 받을때는 소괄호 안으로 넣어주는게 컨벤션이다.
+    val map3: Map<String, List<Long>> = fruits.groupBy(
+        {fruit -> fruit.name},
+        {fruit -> fruit.factoryPrice}
+    )
+
+    // id -> 출고가 Map이 필요해요!
+    // 함수형 파라미터를 두개이상 받을때는 소괄호 안으로 넣어주는게 컨벤션이다.
+    val map4: Map<Long,Long> = fruits.associateBy (
+        {fruit -> fruit.id},
+        {fruit -> fruit.factoryPrice}
+    )
+
+    /**
+     * 중첩된 컬렉션 처리!
+     */
+    val fruitsInList: List<List<Fruit>> = listOf(
+        listOf(
+            Fruit(1L, "apple", 100L, 200L),
+            Fruit(2L, "apple", 100L, 200L),
+            Fruit(3L, "apple", 100L, 200L),
+            Fruit(4L, "apple", 100L, 200L),
+        ),
+        listOf(
+            Fruit(5L, "banana", 100L, 200L),
+            Fruit(6L, "banana", 100L, 200L),
+            Fruit(7L, "banana", 100L, 200L),
+            Fruit(8L, "banana", 100L, 200L),
+        ),
+        listOf(
+            Fruit(9L, "watermelon", 100L, 200L),
+        )
+    )
+    //출고가와 현재가가 동일한 과일을 골라주세여
+    //java에서도 동일한 flatmap을 쓸수 있다. flatmap을 쓰면 List<List>가 단일 List가 된다.
+    val samePriceFruits = fruitsInList.flatMap { list ->
+        list.filter {fruit -> fruit.factoryPrice == fruit.currentPrice}
+    }
+
+    //위 람다는 아래처럼 리펙토링도 가능하다.
+    val samePriceFruits2 = fruitsInList.flatMap { list -> list.samePriceFilter }
+
+    //chatGPT 버전
+    val samePriceFruits3 = fruitsInList.flatten().filter { it.factoryPrice == it.currentPrice }
+
+    //<List<List>>를 그냥 List로 바꿔주세요!
+    //flatten > 진짜로 중첩된 모든 컬렉션을 해체해서 하나의 컬렉션 처넣..
+    val flattenFruit = fruitsInList.flatten()
 }
 
 /**
@@ -48,7 +140,11 @@ data class Fruit(
  val name: String,
  val factoryPrice: Long,
  val currentPrice: Long
-){}
+){
+    //중첩컬렉션 처리 리펙토링하면서 추가함
+    val isSamePrice: Boolean
+        get() = factoryPrice == currentPrice
+}
 
 /**
  * 위에서 배운 용법을 토대로, 17강의 filterFruits의 함수를 리펙토링 해보자!
@@ -95,4 +191,17 @@ private fun filterFruits(fruits: List<Fruit>, filter: (Fruit) -> Boolean)
     return result
 }
 
+/**
+ * list를 맵으로!
+ * 과일이름 -> lst<과일>
+ *     Map이 필요해여!
+ */
+fun pgFunc(){
+    val map: Map<String, List<Fruit>> =
+}
 
+/**
+ * 중첩 컬렉션 리펙토링 하면서 추가한 확장함수
+ */
+val List<Fruit>.samePriceFilter: List<Fruit>
+    get() = this.filter(Fruit::isSamePrice)
